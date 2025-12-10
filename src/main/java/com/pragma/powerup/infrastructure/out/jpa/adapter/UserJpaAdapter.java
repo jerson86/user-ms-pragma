@@ -32,4 +32,9 @@ public class UserJpaAdapter implements IUserPersistencePort {
     public boolean existsByDocumento(String documento) {
         return objectRepository.existsByDocumento(documento);
     }
+
+    @Override
+    public UserModel findById(Long id) {
+        return objectRepository.findById(id).map(objectEntityMapper::toObjectModel).orElse(null);
+    }
 }

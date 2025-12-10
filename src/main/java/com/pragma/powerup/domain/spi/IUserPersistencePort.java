@@ -6,4 +6,5 @@ public interface IUserPersistencePort {
     UserModel saveUser(UserModel userModel);
     UserModel findByCorreo(String correo);
     boolean existsByDocumento(String documento);
+    UserModel findById(Long id);
 }

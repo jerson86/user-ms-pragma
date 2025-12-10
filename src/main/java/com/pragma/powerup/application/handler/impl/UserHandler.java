@@ -25,4 +25,9 @@ public class UserHandler implements IUserHandler {
         userModel.setClave(passwordEncoder.encode(createOwnerRequest.getClave()));
         userServicePort.saveUser(userModel);
     }
+
+    @Override
+    public UserModel getUserId(Long id) {
+        return userServicePort.getUserId(id);
+    }
 }

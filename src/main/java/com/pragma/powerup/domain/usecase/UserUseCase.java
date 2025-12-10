@@ -34,4 +34,9 @@ public class UserUseCase implements IUserServicePort {
 
         userPersistencePort.saveUser(userModel);
     }
+
+    @Override
+    public UserModel getUserId(Long id) {
+        return userPersistencePort.findById(id);
+    }
 }
