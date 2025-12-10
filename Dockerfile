@@ -1,12 +1,22 @@
 # ---- Build Stage ----
-FROM gradle:8.7-jdk21-alpine AS builder
+FROM gradle:8.7-jdk21 AS builder
 WORKDIR /app
 
-COPY build.gradle settings.gradle gradlew ./
+# 1. Copia todos los archivos necesarios para Gradle
+COPY gradlew build.gradle settings.gradle ./
 COPY gradle ./gradle
-RUN ./gradlew dependencies --no-daemon || true
 
-COPY . .
+# 2. CONVERSIÓN CRÍTICA: Convierte los saltos de línea de Windows (CRLF) a Unix (LF)
+# Esto asegura que el script sea interpretable por el shell de Linux.
+RUN sed -i 's/\r$//' gradlew
+
+# 3. ASEGURA los permisos de ejecución del Wrapper
+RUN chmod +x gradlew
+
+# 4. Copia el resto del código fuente del proyecto
+COPY src ./src
+
+# 5. Construye el proyecto
 RUN ./gradlew clean build -x test --no-daemon
 
 # ---- Runtime Stage ----
