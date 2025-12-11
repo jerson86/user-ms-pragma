@@ -6,10 +6,12 @@ import com.pragma.powerup.infrastructure.out.jpa.entity.UserEntity;
 import com.pragma.powerup.infrastructure.out.jpa.mapper.IUserEntityMapper;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Slf4j
 public class UserJpaAdapter implements IUserPersistencePort {
 
     private final IUserRepository objectRepository;
@@ -35,6 +37,14 @@ public class UserJpaAdapter implements IUserPersistencePort {
 
     @Override
     public UserModel findById(Long id) {
-        return objectRepository.findById(id).map(objectEntityMapper::toObjectModel).orElse(null);
+        Optional<UserEntity> entityOptional = objectRepository.findById(id);
+
+        if (entityOptional.isEmpty()) {
+            log.warn("Usuario con ID {} no encontrado en la base de datos.", id);
+            return null;
+        }
+
+        log.info("Usuario con ID {} encontrado y mapeado.", id);
+        return objectEntityMapper.toObjectModel(entityOptional.get());
     }
 }

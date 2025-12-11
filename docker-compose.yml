@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  user-ms:
+    build: .
+    container_name: user_ms
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mysql-db # Asegura que MySQL se inicie antes que la aplicación
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/powerup_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: secret123
+      SERVICE_USER_URL: http://user-ms:8080
+
+  mysql-db:
+    image: mysql:8.0 # Imagen oficial de MySQL
+    container_name: mysql_powerup_db
+    restart: always
+    environment:
+      # Las variables de entorno para MySQL deben coincidir con tu aplicación
+      MYSQL_ROOT_PASSWORD: secret123
+      MYSQL_DATABASE: powerup_db
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "3306:3306"
