@@ -4,13 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pragma.powerup.application.dto.request.CreateOwnerRequest;
 import com.pragma.powerup.application.handler.IUserHandler;
 import com.pragma.powerup.infraestructure.configuration.TestSecurityConfig;
+import com.pragma.powerup.infrastructure.configuration.BeanConfiguration;
 import com.pragma.powerup.infrastructure.input.rest.UserRestController;
+import com.pragma.powerup.infrastructure.out.jpa.mapper.IUserEntityMapper;
+import com.pragma.powerup.infrastructure.out.jpa.repository.IUserRepository;
+import com.pragma.powerup.infrastructure.security.JwtAuthenticationFilter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,7 +28,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserRestController.class)
-@Import(TestSecurityConfig.class)
+@Import({
+        TestSecurityConfig.class,
+        BeanConfiguration.class,
+        JwtAuthenticationFilter.class
+})
 class UserRestControllerTest {
 
     @Autowired
@@ -31,6 +40,15 @@ class UserRestControllerTest {
 
     @MockBean
     private IUserHandler userHandler;
+
+    @MockBean
+    private IUserRepository userRepository;
+
+    @MockBean
+    private IUserEntityMapper userEntityMapper;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -44,6 +62,7 @@ class UserRestControllerTest {
         req.setFechaNacimiento(LocalDate.parse("1990-01-01"));
         req.setCorreo("test@mail.com");
         req.setClave("password123");
+        req.setRole("ADMIN");
         return req;
     }
 

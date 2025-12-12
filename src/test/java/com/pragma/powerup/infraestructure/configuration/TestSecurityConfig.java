@@ -3,7 +3,6 @@ package com.pragma.powerup.infraestructure.configuration;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,8 +22,7 @@ public class TestSecurityConfig {
                 .exceptionHandling(e ->
                         e.accessDeniedHandler((req, res, ex) ->
                                 res.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden"))
-                )
-                .httpBasic(Customizer.withDefaults());
+                );
 
         return http.build();
     }

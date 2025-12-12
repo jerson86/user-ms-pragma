@@ -35,4 +35,7 @@ public class CreateOwnerRequest {
     @NotBlank
     @Size(min = 6, message = "La clave debe tener mínimo 6 caracteres")
     private String clave;
+
+    @NotBlank
+    private String role;
 }

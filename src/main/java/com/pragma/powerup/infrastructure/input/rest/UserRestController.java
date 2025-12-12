@@ -34,6 +34,7 @@ public class UserRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/user/{id}")
     public ResponseEntity<UserModel> findById(@PathVariable Long id) {
         UserModel user = userHandler.getUserId(id);

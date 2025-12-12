@@ -1,5 +1,6 @@
 package com.pragma.powerup.infrastructure.out.jpa.entity;
 
+import com.pragma.powerup.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,8 +35,4 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-    public enum Role {
-        ADMIN, OWNER, CLIENT
-    }
 }

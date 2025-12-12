@@ -15,3 +15,11 @@ app:
   admin:
     username: admin
     password: admin123
+jwt:
+  secret: 1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p
+  expiration:
+    millis: 3600000 # 1 Hora
+
+logging:
+  level:
+    org.springframework.security: DEBUG

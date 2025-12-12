@@ -1,5 +1,6 @@
 package com.pragma.powerup.domain.model;
 
+import com.pragma.powerup.domain.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,5 +22,5 @@ public class UserModel {
     private LocalDate fechaNacimiento;
     private String correo;
     private String clave;
-    private String role;
+    private Role role;
 }

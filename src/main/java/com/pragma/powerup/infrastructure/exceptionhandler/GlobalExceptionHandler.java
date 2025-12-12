@@ -1,5 +1,6 @@
 package com.pragma.powerup.infrastructure.exceptionhandler;
 
+import com.pragma.powerup.domain.enums.BusinessMessage;
 import com.pragma.powerup.domain.exception.DomainException;
 import com.pragma.powerup.infrastructure.exception.NoDataFoundException;
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,14 @@ public class GlobalExceptionHandler {
         body.put("status", HttpStatus.BAD_REQUEST.value());
         body.put("error", "Bad Request");
         body.put("message", ex.getMessage());
+
+        if (ex.getMessage().equals(BusinessMessage.AUTH_INVALID_CREDENTIALS.getMessage())) {
+            body.put("status", HttpStatus.UNAUTHORIZED.value());
+            body.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            body.put("message", ex.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+        }
+
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }

@@ -22,6 +22,7 @@ ext {
     lombokVersion = "1.18.42"
     lombokMapstructBindingVersion = "0.2.0"
     openApiVersion = "2.8.14"
+    jjwtVersion = "0.12.5"
 }
 
 dependencies {
@@ -32,9 +33,12 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${openApiVersion}"
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
 
     developmentOnly "org.springframework.boot:spring-boot-devtools"
     runtimeOnly "com.mysql:mysql-connector-j"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
 
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
