@@ -10,5 +10,5 @@ import lombok.*;
 @EqualsAndHashCode
 public class TokenResponse {
     private String jwt;
-    private String tokenType = "Bearer";
+    private final String tokenType = "Bearer";
 }

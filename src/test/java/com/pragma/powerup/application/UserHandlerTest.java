@@ -1,6 +1,6 @@
 package com.pragma.powerup.application;
 
-import com.pragma.powerup.application.dto.request.CreateOwnerRequest;
+import com.pragma.powerup.application.dto.request.CreateUserRequest;
 import com.pragma.powerup.application.handler.impl.UserHandler;
 import com.pragma.powerup.application.mapper.IUserRequestMapper;
 import com.pragma.powerup.domain.api.IUserServicePort;
@@ -33,12 +33,12 @@ class UserHandlerTest {
     @InjectMocks
     private UserHandler userHandler;
 
-    private CreateOwnerRequest request;
+    private CreateUserRequest request;
     private UserModel userModel;
 
     @BeforeEach
     void setup() {
-        request = new CreateOwnerRequest();
+        request = new CreateUserRequest();
         request.setNombre("Carlos");
         request.setApellido("Ramirez");
         request.setCorreo("owner@test.com");

@@ -71,7 +71,7 @@ class AuthRestControllerTest {
         validRequest.setEmail(VALID_EMAIL);
         validRequest.setPassword(VALID_PASSWORD);
 
-        mockResponse = new TokenResponse(GENERATED_JWT, "Bearer");
+        mockResponse = new TokenResponse(GENERATED_JWT);
 
         invalidEmailRequest = new LoginRequest();
         invalidEmailRequest.setEmail("notanemail");

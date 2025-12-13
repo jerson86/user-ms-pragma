@@ -45,7 +45,7 @@ class AuthHandlerTest {
         mockRequest.setPassword(RAW_PASSWORD);
 
         mockTokenModel = new TokenModel(GENERATED_JWT);
-        mockTokenResponse = new TokenResponse(GENERATED_JWT, "Bearer");
+        mockTokenResponse = new TokenResponse(GENERATED_JWT);
     }
 
     @Test

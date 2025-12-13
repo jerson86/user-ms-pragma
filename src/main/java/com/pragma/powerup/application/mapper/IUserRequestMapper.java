@@ -1,6 +1,6 @@
 package com.pragma.powerup.application.mapper;
 
-import com.pragma.powerup.application.dto.request.CreateOwnerRequest;
+import com.pragma.powerup.application.dto.request.CreateUserRequest;
 import com.pragma.powerup.domain.model.UserModel;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -9,5 +9,5 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface IUserRequestMapper {
-    UserModel toObject(CreateOwnerRequest createOwnerRequest);
+    UserModel toObject(CreateUserRequest createUserRequest);
 }

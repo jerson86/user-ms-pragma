@@ -55,7 +55,8 @@ public class GlobalExceptionHandler {
         body.put("error", "Bad Request");
         body.put("message", ex.getMessage());
 
-        if (ex.getMessage().equals(BusinessMessage.AUTH_INVALID_CREDENTIALS.getMessage())) {
+        if (ex.getMessage().equals(BusinessMessage.AUTH_INVALID_CREDENTIALS.getMessage()) ||
+                ex.getMessage().equals(BusinessMessage.AUTH_UNAUTHORIZED_ROLE.getMessage())) {
             body.put("status", HttpStatus.UNAUTHORIZED.value());
             body.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
             body.put("message", ex.getMessage());

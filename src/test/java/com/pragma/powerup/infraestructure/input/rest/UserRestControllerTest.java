@@ -1,8 +1,11 @@
 package com.pragma.powerup.infraestructure.input.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pragma.powerup.application.dto.request.CreateOwnerRequest;
+import com.pragma.powerup.application.dto.request.CreateUserRequest;
 import com.pragma.powerup.application.handler.IUserHandler;
+import com.pragma.powerup.domain.enums.BusinessMessage;
+import com.pragma.powerup.domain.exception.DomainException;
+import com.pragma.powerup.domain.spi.IAuthContextPort;
 import com.pragma.powerup.infraestructure.configuration.TestSecurityConfig;
 import com.pragma.powerup.infrastructure.configuration.BeanConfiguration;
 import com.pragma.powerup.infrastructure.input.rest.UserRestController;
@@ -22,8 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -50,11 +53,14 @@ class UserRestControllerTest {
     @MockBean
     private PasswordEncoder passwordEncoder;
 
+    @MockBean
+    private IAuthContextPort authContextPort;
+
     @Autowired
     private ObjectMapper objectMapper;
 
-    private CreateOwnerRequest buildValidRequest() {
-        CreateOwnerRequest req = new CreateOwnerRequest();
+    private CreateUserRequest buildValidRequest() {
+        CreateUserRequest req = new CreateUserRequest();
         req.setNombre("Juan");
         req.setApellido("Perez");
         req.setDocumento("123456789");
@@ -67,40 +73,51 @@ class UserRestControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "ADMIN")
     void saveOwner_WhenAdmin_ShouldReturn201() throws Exception {
+        // ARRANGE
+        when(authContextPort.getAuthenticatedUserRole()).thenReturn("ADMIN");
+        CreateUserRequest req = buildValidRequest();
 
-        CreateOwnerRequest req = buildValidRequest();
-
-        mockMvc.perform(post("/api/v1/admin/owner")
+        mockMvc.perform(post("/api/v1/user")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .with(user("testUser").roles("ADMIN"))
                         .content(objectMapper.writeValueAsString(req)))
                 .andExpect(status().isCreated());
 
-        verify(userHandler, times(1)).saveUser(any(CreateOwnerRequest.class));
+        verify(userHandler, times(1)).saveUser(any(CreateUserRequest.class));
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     void saveOwner_WhenNotAdmin_ShouldReturn403() throws Exception {
+        // ARRANGE
+        when(authContextPort.getAuthenticatedUserRole()).thenReturn("OTHER");
+        CreateUserRequest req = buildValidRequest();
+        req.setRole("OTHER");
+        doThrow(new DomainException(BusinessMessage.AUTH_INVALID_CREDENTIALS))
+                .when(userHandler).saveUser(any(CreateUserRequest.class));
 
-        mockMvc.perform(post("/api/v1/admin/owner")
+        when(authContextPort.getAuthenticatedUserRole()).thenReturn("OTHER");
+
+        // ACT & ASSERT
+        mockMvc.perform(post("/api/v1/user")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(buildValidRequest())))
-                .andExpect(status().isForbidden());
+                        .with(user("testUser").roles("OTHER"))
+                        .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isUnauthorized());
 
-        verify(userHandler, times(0)).saveUser(any());
+        verify(userHandler, times(1)).saveUser(any(CreateUserRequest.class));
     }
 
     @Test
     @WithMockUser(roles = "ADMIN")
     void saveOwner_WhenInvalidRequest_ShouldReturn400() throws Exception {
 
-        CreateOwnerRequest invalidReq = new CreateOwnerRequest();
+        CreateUserRequest invalidReq = new CreateUserRequest();
         invalidReq.setNombre("");
 
-        mockMvc.perform(post("/api/v1/admin/owner")
+        mockMvc.perform(post("/api/v1/user")
                         .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer test")
                         .content(objectMapper.writeValueAsString(invalidReq)))
                 .andExpect(status().isBadRequest());
 

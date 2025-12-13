@@ -3,6 +3,7 @@ package com.pragma.powerup.domain;
 import com.pragma.powerup.domain.enums.BusinessMessage;
 import com.pragma.powerup.domain.exception.DomainException;
 import com.pragma.powerup.domain.model.UserModel;
+import com.pragma.powerup.domain.spi.IAuthContextPort;
 import com.pragma.powerup.domain.spi.IUserPersistencePort;
 import com.pragma.powerup.domain.usecase.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,9 @@ class UserUseCaseTest {
     @Mock
     private IUserPersistencePort persistencePort;
 
+    @Mock
+    private IAuthContextPort authContextPort;
+
     @InjectMocks
     private UserUseCase userUseCase;
 
@@ -35,6 +39,7 @@ class UserUseCaseTest {
         user.setCorreo("test@mail.com");
         user.setDocumento("123456789");
         user.setFechaNacimiento(LocalDate.now().minusYears(AGE_MIN_ADULT + 1));
+        when(authContextPort.getAuthenticatedUserRole()).thenReturn("ADMIN");
     }
 
     @Test
