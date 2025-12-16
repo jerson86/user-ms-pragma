@@ -35,4 +35,7 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @Column(unique = true)
+    Long restaurantId;
 }

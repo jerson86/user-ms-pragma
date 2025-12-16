@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UserModel {
     private Long id;
-
     private String nombre;
     private String apellido;
     private String documento;
@@ -23,4 +22,5 @@ public class UserModel {
     private String correo;
     private String clave;
     private Role role;
+    Long restaurantId;
 }

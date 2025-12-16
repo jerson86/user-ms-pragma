@@ -32,7 +32,8 @@ public class AuthUseCase implements IAuthServicePort {
 
         String token = jwtPort.createToken(
                 user.getId().toString(),
-                user.getRole().name()
+                user.getRole().name(),
+                user.getRestaurantId()
         );
 
         return new TokenModel(token);
